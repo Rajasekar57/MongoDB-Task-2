@@ -1,0 +1,70 @@
+// 1.Creating a new database named zen
+//use zen;
+
+// 2.users
+db.createCollection("users")
+
+// 3.codekata
+db.createCollection("codekata")
+
+// 4.attendance
+db.createCollection("attendance")
+
+// 5.topics
+db.createCollection("topics")
+
+// 6.tasks
+db.createCollection("tasks")
+
+// 7.company_drives
+db.createCollection("company_drives")
+
+// 8.mentors
+db.createCollection("mentors")
+
+// 9.Find all the topics and tasks which are thought in the month of October
+
+db.tasks.aggregate([
+    {$match:{month:"October"}},
+    {$group:{
+        topic:'$topics',
+        task:'$tasks'
+    }}
+])
+
+// 10.Find all the company drives which appeared between 15 oct-2020 and 31-oct-2020
+
+db.company_drives.
+find({appeared:{$gt: new Date("15 oct-2020"),
+$lt: new Date("31-oct-2020")}})
+
+// 11.Find all the company drives and students who are appeared for the placement.
+
+db.tasks.aggregate([
+    {$match:{attendance:"present"}},
+    {$group:{
+        company:'$company_drives',
+        student:'$users'
+    }}
+])
+
+// 12.Find the number of problems solved by the user in codekata
+
+db.codekata.find().
+forEach(function(prob)
+{print("Name",prob.users,"No.of problems",pob.solved)})
+
+// 13.Find all the mentors with who has the mentee's count more than 15
+
+db.mentors.find({mentee_count:{$gt:15}})
+
+// 14.Find the number of users who are absent and task is not submitted  
+//between 15 oct-2020 and 31-oct-2020
+
+db.users.
+find({$and:[
+    {attendance:"absent"},
+    {task:"not submitted"},
+    {date:{$gt: new Date("15 oct-2020"),
+    $lt: new Date("31-oct-2020")}}
+]});
